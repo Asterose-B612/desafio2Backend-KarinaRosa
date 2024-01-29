@@ -42,7 +42,7 @@ export class ProductManager {
         //buscame 1 prod cuyo code sea igual al code del nuevo producto
         const INDICE = PRODS.findIndex(prod => prod.code === newProduct.code)
         //si el indice es distinto de -1(-1 significa que el elemento no existe)OJO CON PONER  !=-1
-
+        console.log(INDICE)
         if (INDICE === -1) {
             //si no existe lo agrego al array
             PRODS.push(newProduct)
@@ -116,9 +116,9 @@ export class ProductManager {
      const PRODSFILTRADOS =PRODS.filter(e=> e.id != id)          
            //una vez que tengo este array editado, lo voy a pisar con el writeFile
            await fs.writeFile(this.path, JSON.stringify(PRODSFILTRADOS))
-           console.log('Eliminado')
+           console.log('Producto Eliminado')
         }else{
-            console.log('No encuentrado')
+            console.log('Producto no encontrado')
         }
     }
 }
