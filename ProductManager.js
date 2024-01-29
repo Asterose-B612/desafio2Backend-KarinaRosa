@@ -19,7 +19,7 @@ export class ProductManager {
 
 
 
-  //MÉTODOS:
+    //MÉTODOS:
     //f asincrona xq uso promesas fs., q me pide como parametro 1 nuevo producto
     async addProduct(newProduct) {
         //voy a consultar mis elementos, donde esta alojado mi array de productos en la ruta que me de this.path, lo voy a tomar como utf-8
@@ -34,7 +34,6 @@ export class ProductManager {
                 hasError = true;
             }
         }
-
         if (hasError) {
             return // Salir de la función si hay un error
         }
@@ -53,17 +52,16 @@ export class ProductManager {
         } else {
             console.log("Producto existente")
         }
-
     }
 
 
 
-  
     async getProducts() {
         const PRODS = JSON.parse(await fs.readFile(this.path, 'utf-8'))
         //misma linea de codigo q al inicio
         console.log(PRODS)
     }
+
 
 
     //misma logica de la funcion anterior, le pido un id por parametro
@@ -81,43 +79,43 @@ export class ProductManager {
 
 
 
-//aca me va a pedir un id y un objeto
+    //aca me va a pedir un id y un objeto
     async updateProduct(id, nuevoProducto) {
         const PRODS = JSON.parse(await fs.readFile(this.path, 'utf-8'))
         //misma linea de codigo q al inicio
-//CONSULTO POR INDICE
+        //CONSULTO POR INDICE
         const INDICE = PRODS.findIndex(e => e.id === id)
         //si el producto existe
         if (INDICE != -1) {
-         //PRODS[INDICE].stock = nuevoProducto.stock  SE AGREGA POR CADA UNA DE LAS PROPIEDADES
+            //PRODS[INDICE].stock = nuevoProducto.stock  SE AGREGA POR CADA UNA DE LAS PROPIEDADES
             PRODS[INDICE].title = nuevoProducto.title
             PRODS[INDICE].description = nuevoProducto.description
             PRODS[INDICE].price = nuevoProducto.price
             PRODS[INDICE].thumbnail = nuevoProducto.thumbnail
             PRODS[INDICE].code = nuevoProducto.code
             PRODS[INDICE].stock = nuevoProducto.stock
-           //una vez que tengo este array editado, lo voy a pisar con el writeFile
-           await fs.writeFile(this.path, JSON.stringify(PRODS))
-           console.log('Actualización satisfactoria')
-        }else{
+            //una vez que tengo este array editado, lo voy a pisar con el writeFile
+            await fs.writeFile(this.path, JSON.stringify(PRODS))
+            console.log('Actualización satisfactoria')
+        } else {
             console.log('Producto inexistente')
         }
     }
 
 
+
     async deleteProduct(id) {
         const PRODS = JSON.parse(await fs.readFile(this.path, 'utf-8'))
-        
-//CONSULTO POR INDICE
+        //CONSULTO POR INDICE
         const INDICE = PRODS.findIndex(e => e.id === id)
         //si el producto existe
         if (INDICE != -1) {
             //para editar un delete utilizo un filter: (filtrame todos los productos => cuyo id !=sea distinto al id ingresado)
-     const PRODSFILTRADOS =PRODS.filter(e=> e.id != id)          
-           //una vez que tengo este array editado, lo voy a pisar con el writeFile
-           await fs.writeFile(this.path, JSON.stringify(PRODSFILTRADOS))
-           console.log('Producto Eliminado')
-        }else{
+            const PRODSFILTRADOS = PRODS.filter(e => e.id != id)
+            //una vez que tengo este array editado, lo voy a pisar con el writeFile
+            await fs.writeFile(this.path, JSON.stringify(PRODSFILTRADOS))
+            console.log('Producto Eliminado')
+        } else {
             console.log('Producto no encontrado')
         }
     }
