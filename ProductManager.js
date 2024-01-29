@@ -8,36 +8,16 @@ updateProduct, deleteProduct.
 VOY A USAR PROMESAS DE FS
 */
 
-
 //genero 1 clase con 1 constructor que me pide path como paramentro para poderlo almacenar
 
 import { promises as fs } from 'fs'
 
 export class ProductManager {
     constructor(path) {
-        this.path = path //ruta generada
-    }//path seria la ruta donde van a estar alojados nuestros elementos. YA NO VA EL ARRAY VACIO
-
-  
-    async getProducts() {
-        const PRODS = JSON.parse(await fs.readFile(this.path, 'utf-8'))
-        //misma linea de codigo q al inicio
-        return PRODS
-    }
+        this.path = path
+    }//path:seria la ruta donde van a estar alojados nuestros elementos. YA NO VA EL ARRAY VACIO
 
 
-    //misma logica de la funcion anterior, le pido un id por parametro
-    async getProductById(id) {
-        const PRODS = JSON.parse(await fs.readFile(this.path, 'utf-8'))
-        //pregunto x el array de productos.Buscame el elemento cuyo id sea el id ingresado
-        const PROD = PRODS.find(e => e.id === id)
-
-        if (PROD) {
-            return PROD
-        } else {
-            return "El producto no existe"
-        }
-    }
 
   //MÉTODOS:
     //f asincrona xq uso promesas fs., q me pide como parametro 1 nuevo producto
@@ -49,34 +29,55 @@ export class ProductManager {
         const REQUIREDFIELDS = ['title', 'description', 'price', 'thumbnail', 'code', 'stock'];
         let hasError = false;
         for (const field of REQUIREDFIELDS) {
-            if (!(field in newProduct) || producto[field] === undefined || producto[field] === '') {
+            if (!(field in newProduct) || newProduct[field] === undefined || newProduct[field] === '') {
                 console.log("Error: El campo '" + field + "' es obligatorio.");
                 hasError = true;
             }
         }
 
         if (hasError) {
-            return; // Salir de la función si hay un error
+            return // Salir de la función si hay un error
         }
         //1 vez q tengo el producto corroboro si existe VOY A VALIDAR
         //buscame 1 prod cuyo code sea igual al code del nuevo producto
-        const INDICE = PRODS.findIndex(prod => prod.code === producto.code)
+        const INDICE = PRODS.findIndex(prod => prod.code === newProduct.code)
         //si el indice es distinto de -1(-1 significa que el elemento no existe)OJO CON PONER  !=-1
 
-        if (INDICE = -1) {
+        if (INDICE === -1) {
             //si no existe lo agrego al array
             PRODS.push(newProduct)
             //vuelvo a escribir este archivo.De lo que seria este nuevo array con este nuevo producto (DE ESTA LOCACION, ENVIAME ESTE ARRAY)
             await fs.writeFile(this.path, JSON.stringify(PRODS))
             //Y RETORNAME LO QUE SERIA EL MENSAJE
-            return "Creado con éxito"
+            console.log("Creado con éxito")
         } else {
-            return "Producto existente"
+            console.log("Producto existente")
         }
 
     }
 
 
+
+  
+    async getProducts() {
+        const PRODS = JSON.parse(await fs.readFile(this.path, 'utf-8'))
+        //misma linea de codigo q al inicio
+        console.log(PRODS)
+    }
+
+
+    //misma logica de la funcion anterior, le pido un id por parametro
+    async getProductById(id) {
+        const PRODS = JSON.parse(await fs.readFile(this.path, 'utf-8'))
+        //pregunto x el array de productos.Buscame el elemento cuyo id sea el id ingresado
+        const PROD = PRODS.find(e => e.id === id)
+
+        if (PROD) {
+            console.log(PROD)
+        } else {
+            console.log("El producto no existe")
+        }
+    }
 
 
 
@@ -97,14 +98,11 @@ export class ProductManager {
             PRODS[INDICE].stock = nuevoProducto.stock
            //una vez que tengo este array editado, lo voy a pisar con el writeFile
            await fs.writeFile(this.path, JSON.stringify(PRODS))
-           return 'Actualización satisfactoria'
+           console.log('Actualización satisfactoria')
         }else{
-            return 'Producto inexistente'
+            console.log('Producto inexistente')
         }
     }
-
-
-
 
 
     async deleteProduct(id) {
@@ -118,9 +116,9 @@ export class ProductManager {
      const PRODSFILTRADOS =PRODS.filter(e=> e.id != id)          
            //una vez que tengo este array editado, lo voy a pisar con el writeFile
            await fs.writeFile(this.path, JSON.stringify(PRODSFILTRADOS))
-           return 'Eliminado'
+           console.log('Eliminado')
         }else{
-            return 'Producto inexistente'
+            console.log('No encuentrado')
         }
     }
 }
